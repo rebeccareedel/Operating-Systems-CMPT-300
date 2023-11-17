@@ -8,40 +8,39 @@
 
 int num_free_bytes = 0; // used to check if compaction is necessary
 int first_call = 1; // used to check if first call to program and if should initialize DS
-int *ptr;
+void *ptr;
 
 // create inUse Array -- should be empty but initialized to be size of 256 bytes
-int * inUse[MAX_SIZE] = {NULL};
+size_t inUse[MAX_SIZE];
 
 // create notInUse Array -- should be initialized to have 0 index
-int * notInUse[MAX_SIZE] = {NULL};
+size_t notInUse[MAX_SIZE];
 
 // each node in hashtable has key and value, 
 // key = number of bytes from base ptr, value = number of bytes allocated in segment
 typedef struct {
-    int key;
-    int value;
+    size_t key;
+    size_t value;
 } bytes;
 
 bytes * hash_table[MAX_SIZE];
 
 void hash_table_insert(bytes *b) {
-    int index = b->key;
+    size_t index = b->key;
     hash_table[index] = b;
 }
-bytes *hash_table_search(int *key){
-    int index = key;
-    if (hash_table[index] != NULL && hash_table[index]->key == key){
-        return hash_table[index];
+size_t hash_table_search(size_t index){
+    if (hash_table[index] != NULL && hash_table[index]->key == index){
+        return hash_table[index]->value;
     } else{
-        return NULL;
+        return -1;
     }
     
 }
 // creates initial memory block, hashtable for showing current memory segments, 2 arrays (inUse & notInUse) for organization
 void mem_init(){
     // get initial memory block -- 256 bytes
-    ptr = (int*)malloc(32 * sizeof(int));
+    ptr = (size_t*)malloc(32 * sizeof(size_t));
     
     notInUse[0] = 0; // 0 since currently only 1 big block with 256 bytes
 
@@ -49,17 +48,17 @@ void mem_init(){
     bytes init = {.key = 0, .value = 256};
     hash_table_insert(&init);
 }
-/*
+
 void print_table(){
     for (int i=0; i< MAX_SIZE; i++){
         if(hash_table[i] == NULL) {
             printf("\t%i\t--\n", i);
         } else{
-            printf("\t%i\t%i\n", i, hash_table[i]->value);
+            printf("\t%i\t%li\n", i, hash_table[i]->value);
         }
     }
 }
-*/
+
 // returns pointer to memory of requested size, adds index to inUse array
 void *my_malloc(size_t size){
     // check if first time calling program -- if yes, initialize values
@@ -67,25 +66,27 @@ void *my_malloc(size_t size){
         mem_init();
         first_call = 0;
     }
+    
     print_table();
     
     // get first index of notInUse Array -- check in hashtable if enough size -> repeat until finds spot
-    int key;
-    int index = 0;
-    int foundSpot = 0;
+    size_t key;
+    size_t index = 0;
+    size_t foundSpot = 0;
     while(foundSpot == 0 && index < 256){
         key = notInUse[index];
         // search in hashmap[key] for value 
-        int old_value = hash_table_search(key);
+        size_t old_value = hash_table_search(key);
         // check if segment size large enough for desired allocation
         if (old_value >= size){
-            hash_table[key] = size;
-            bytes user = {.key = key+old_value, .value = old_value - size};
+            hash_table[key]->value = size;
+            bytes user = {.key = key+size, .value = old_value - size};
             hash_table_insert(&user);
             foundSpot = 1;
-            return ptr + key;
+            print_table();
+            return ptr - key;
         }
-
+        
         index += 1;
     }
     

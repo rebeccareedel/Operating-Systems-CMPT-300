@@ -72,8 +72,7 @@ void *my_malloc(size_t size){
     // get first index of notInUse Array -- check in hashtable if enough size -> repeat until finds spot
     size_t key;
     size_t index = 0;
-    size_t foundSpot = 0;
-    while(foundSpot == 0 && index < 256){
+    while(index < 256){
         key = notInUse[index];
         // search in hashmap[key] for value 
         size_t old_value = hash_table_search(key);
@@ -82,7 +81,6 @@ void *my_malloc(size_t size){
             hash_table[key]->value = size;
             bytes user = {.key = key+size, .value = old_value - size};
             hash_table_insert(&user);
-            foundSpot = 1;
             print_table();
             return ptr - key;
         }

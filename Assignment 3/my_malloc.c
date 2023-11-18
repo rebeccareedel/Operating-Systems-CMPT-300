@@ -37,6 +37,7 @@ size_t hash_table_search(size_t index){
     }
     
 }
+
 // creates initial memory block, hashtable for showing current memory segments, 2 arrays (inUse & notInUse) for organization
 void mem_init(){
     // get initial memory block -- 256 bytes
@@ -78,6 +79,8 @@ void *my_malloc(size_t size){
         size_t old_value = hash_table_search(key);
         // check if segment size large enough for desired allocation
         if (old_value >= size){
+            //bytes *sizePtr = (bytes*) &size;
+            //hash_table[key] = sizePtr; // NOT RIGHT
             hash_table[key]->value = size;
             bytes user = {.key = key+size, .value = old_value - size};
             hash_table_insert(&user);

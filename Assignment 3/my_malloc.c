@@ -3,7 +3,7 @@
 #include "my_malloc.h"
 #include "my_queue.h"
 #include <stdlib.h>
-#include <stdio.h>
+#include <stdio.h>  /// ADD ERROR CHECKING: if requested memory = 0 or negative
 
 #define MAX_SIZE 256
 
@@ -18,19 +18,19 @@ struct block
 };
 
 // acts like an array of structs with (#bytes since starter pointer)key = index and (#bytes in the chunk) value = hashtable[index], isbusy = if currently inUse
-struct block blockHeader[MAX_SIZE + 1];
+struct block blockHeader[MAX_SIZE];
 
 // creates initial memory block, hashtable for showing current memory segments, 2 arrays (inUse & notInUse) for organization
 void mem_init() {
     // get initial memory block -- 256 bytes
-    ptr = (size_t*)malloc(256 * sizeof(size_t));
-    num_free_bytes = 256;
+    ptr = (size_t*)malloc(MAX_SIZE * sizeof(size_t));
+    num_free_bytes = MAX_SIZE;
     reset(); // resets circular queue
 
     enqueue(0); // set first notInUse queue element to 0 since only 1 chunck of 256 bytes at the start
 
     // initialize first chunk to currently have all the memory
-    blockHeader[0].value = 256;
+    blockHeader[0].value = MAX_SIZE;
     blockHeader[0].status = 0;
 }
 
@@ -41,7 +41,6 @@ void print_table() {
         printf("\t%li\t%li\n", index, blockHeader[index].value);
     }
 }
-
 
 // returns pointer to memory of requested size, adds index to inUse array
 void* my_malloc(size_t size) {
@@ -55,42 +54,33 @@ void* my_malloc(size_t size) {
     size_t key;
     size_t index = 0;
     size_t numberElements = returnNumberElements();
+    if (num_free_bytes == 0 || num_free_bytes < size) {
+        return NULL;
+    }
+
     while (index < numberElements + 1) {
 
         // get key for available memory chunk
         key = dequeue();
         if (key == -1) {
-            if (num_free_bytes > size) {
-                // must do compaction --------------------------------------------------
-            }
             return NULL; // queue = empty -> no available chunks
         }
-        /*
-        size_t value1 = blockHeader[key].value; //amount of bytes to shift over.
-        if(value1 < size && num_free_bytes >= size){
-            key2 = dequeue();
-            size_t value2 = blockHeader[key2].value;
-            I'm thinking of shifting array indices by value1, so that we can create empty block at value2.
-            but shifting array indices/hash keys will involve a function which'll make it O(n2) idk. :((
-
-        }
-        */
-
         // search in arr[key] for # of bytes in current chunk
         size_t old_value = blockHeader[key].value;
 
         if (old_value != 0 && blockHeader[key + old_value].status == 2) { //colalesce from left side
             blockHeader[key].value += blockHeader[key + old_value].value;
             blockHeader[key + old_value].value = 0;
-            dequeue(key + old_value);
 
             if (blockHeader[key].value >= size) {
+                size_t new_val = blockHeader[key].value;
+
                 // updates current index to only have allocated size
                 blockHeader[key].value = size;
                 blockHeader[key].status = 1;
 
                 // creates new index for left over memory chunk
-                blockHeader[key + size].value = (blockHeader[key].value) - size; // READ!!!!! shoudlnt it be new value - size??? 
+                blockHeader[key + size].value = new_val - size;
                 blockHeader[key + size].status = 2;
                 if (blockHeader[key + size].value != 0) {
                     enqueue(key + size); // adds new avail memory chunk header to notInUse queue 
@@ -122,8 +112,8 @@ void* my_malloc(size_t size) {
         }
         else if (old_value != 0) { // make sure not one that was previously coalesced 
             enqueue(key); // not enough avail memory space in chunk for this allocation -> put back on queue for future smaller allocation
-            index += 1;
         }
+        index += 1;
     }
     printf("\nNot enough memory, consider freeing some space. Cannot allocate more memory. \n");
     return NULL;

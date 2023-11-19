@@ -92,6 +92,8 @@ void display() {
   }
 }
 
-size_t returnNumberElements(){
+int returnNumberElements() {
+    //printf("\n\n%d", numberElements);
+    //display();
     return numberElements;
 }

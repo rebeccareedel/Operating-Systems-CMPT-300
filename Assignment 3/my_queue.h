@@ -20,8 +20,9 @@ size_t dequeue();
 void display();
 
 // returns number of total elements in queue
-size_t returnNumberElements();
+int returnNumberElements();
 
+// used to reset values between test runs
 void reset();
 
 #endif

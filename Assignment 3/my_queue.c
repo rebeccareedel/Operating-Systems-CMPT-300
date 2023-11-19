@@ -1,4 +1,4 @@
-// Rebecca Reedel 301454910, Asmita Srivastava    -- Program that does operations on an array to create a circular queue
+// Rebecca Reedel 301454910, Asmita Srivastava 301436340   -- Program that does operations on an array to create a circular queue
 // Code adapted from: https://www.programiz.com/dsa/circular-queue
 
 #include <stdlib.h>

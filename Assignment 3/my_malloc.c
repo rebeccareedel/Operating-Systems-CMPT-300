@@ -1,4 +1,4 @@
-// Rebecca Reedel, 301454910 Asmita Srivastava,
+// Rebecca Reedel 301454910, Asmita Srivastava 301436340
 
 #include "my_malloc.h"
 #include "my_queue.h"

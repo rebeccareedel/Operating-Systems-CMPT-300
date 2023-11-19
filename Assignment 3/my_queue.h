@@ -1,4 +1,4 @@
-// Rebecca Reedel, 301454910 Asmita Srivastava,   --- CIRCULAR QUEUE
+// Rebecca Reedel 301454910, Asmita Srivastava 301436340  --- CIRCULAR QUEUE
 
 #ifndef _MY_QUEUE_H_
 #define _MY_QUEUE_H_

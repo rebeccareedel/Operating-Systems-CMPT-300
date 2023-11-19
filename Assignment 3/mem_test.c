@@ -100,43 +100,93 @@ void test3() {
     }
 }
 
-// allocates memory in order to check accuracy of coalesce property (Ability to merge contigous blocks of free memory)
+// checking doesn't malloc if no space in memory chunk
 void test4() {
-    printf("\nAllocating 256 bytes\n");
+    // allocate 256 bytes
     void* ptr = my_malloc(4);
     void* ptr1 = my_malloc(2);
     void* ptr2 = my_malloc(250);
-    printf("\nNumber of free bytes = %li", checkNumBytesFree());
-    //print_table();
-    printf("\nFreeing 6 continguous bytes\n");
+    void* ptr3 = my_malloc(1); // should fail since not enough memory
+    if (ptr3 == NULL ) {
+        printf("\n Test 4: Ensuring Allocation Unsuccessful When No Free Bytes -> Success\n");
+    }
+    else {
+        printf("\n Test 4: Ensuring Allocation Unsuccessful When No Free Bytes -> Failure\n");
+    }
+}
+
+// checks that malloc doesn't work if size requested = 0 or negative 
+void test5(){
+    void* ptr = my_malloc(250);
+    void* ptr1 = my_malloc(8);
+    if (ptr1 == NULL) {
+        printf("\n Test 5: Ensuring Allocation Unsuccessful When Not Enough Free Bytes -> Success\n");
+    }
+    else {
+        printf("\n Test 5: Ensuring Allocation Unsuccessful When Not Enough Free Bytes -> Failure\n");
+    }
+}
+
+// checks that malloc doesn't work if size requested = 0 or negative 
+void test6(){
+    void* ptr = my_malloc(0);
+    void* ptr1 = my_malloc(-5);
+    if (ptr == NULL && ptr1 == NULL) {
+        printf("\n Test 5: Ensuring Allocation Unsuccessful When Given 0 or Negative Values -> Success\n");
+    }
+    else {
+        printf("\n Test 5: Ensuring Allocation Unsuccessful When Given 0 or Negative Values -> Failure\n");
+    }
+}
+
+// allocates memory in order to check accuracy of coalesce property in malloc (Ability to merge contigous blocks of free memory)
+void test7() {
+    // allocate 256 bytes
+    void* ptr = my_malloc(4);
+    void* ptr1 = my_malloc(2);
+    void* ptr2 = my_malloc(250);
+    // free 6 bytes
     my_free(ptr);
     my_free(ptr1);
-    printf("\nNumber of free bytes = %li", checkNumBytesFree());
-    printf("\nAttempting to allocate 6 new bytes: Should succeed due to Coalescence, merging adjacent free blocks!!\n");
-    void* ptr3 = my_malloc(6);
-    if (ptr3 == NULL) {
-        printf("\nMemory allocation failed.\n");
-        exit(0);
+    void* ptr3 = my_malloc(6); // should allocate due to left-side coalescing during malloc
+    if (ptr3 != NULL) {
+        printf("\n Test 6: Allocating Memory w/ Left-Side Coalescing of Free Bytes during Malloc -> Success\n");
     }
     else {
-        printf("\nMemory allocation successful. %d bytes allocated at address %p.\n", 6, ptr3);
+        printf("\n Test 6: Allocating Memory w/ Left-Side Coalescing of Free Bytes during Malloc -> Failure\n");
     }
-    printf("\nNumber of free bytes = %li", checkNumBytesFree());
-    printf("\nAttempting to allocate 6 more bytes: Should fail because not enough memory. Max. capacity reached!\n");
-    void* ptr4 = my_malloc(6);
-    if (ptr4 == NULL) {
-        printf("\nMemory allocation failed.\n");
-        exit(0);
-    }
-    else {
-        printf("\nMemory allocation successful. %d bytes allocated at address %p.\n", 6, ptr4);
-    }
-
 }
+
+// allocates memory in order to check accuracy of coalesce property in free
+void test8() {
+    // allocate 256 bytes
+    void* ptr = my_malloc(4);
+    void* ptr1 = my_malloc(2);
+    void* ptr2 = my_malloc(250);
+    // free 6 bytes
+    my_free(ptr1);
+    my_free(ptr);
+    void* ptr3 = my_malloc(6); // should allocate due to right-side coalescing during free
+    if (ptr3 != NULL) {
+        printf("\n Test 7: Allocating Memory w/ Right-Side Coalescing of Free Bytes during Free -> Success\n");
+    }
+    else {
+        printf("\n Test 7: Allocating Memory w/ Right-Side Coalescing of Free Bytes during Free -> Failure\n");
+    }
+}
+
+
+// tests that array of structs properly updated during left-side coalescing
+
+// tests that array of structs properly updated during right-side coalescing
+
+// tests that queue properly updated during left side coalescing 
+
+// tests that queue properly updated during right side coalescing 
 
 int main() {
     printf("-------------------------START OF TESTS---------------------------\n");
-
+    /*
     test1(); // tests allocation
     mem_init();
 
@@ -145,8 +195,31 @@ int main() {
 
     test3(); // tests allocation and free + checks number of headers in the queue
     mem_init();
+    
+    test4(); // tests allocation unsucessful when no more memory free
+    mem_init();
+   
+    test5(); // tests allocation unsuccessful if not enough memory free
+    mem_init();
 
-    //test4(); // tests coalesce property of merging adjacent free blocks to allocate memory successfully. 
+    test6(); // checks that malloc doesn't work if size requested = 0 or negative // tests coalesce property of merging adjacent free blocks from left-side to allocate memory successfully. 
+    mem_init();
+    
+    test7(); // tests coalesce property of merging adjacent free blocks from left-side to allocate memory successfully. 
+    mem_init();
+    
+    test8(); // tests coalesce property of merging adjacent free blocks from right-side to allocate memory successfully. 
+    mem_init();
+
+    */
+
+    // tests that array of structs properly updated during left-side coalescing
+
+    // tests that array of structs properly updated during right-side coalescing
+
+    // tests that queue properly updated during left side coalescing 
+
+    // tests that queue properly updated during right side coalescing 
 
     printf("\n---------------------------END OF TESTS-----------------------------\n");
 }

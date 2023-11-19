@@ -49,15 +49,17 @@ void* my_malloc(size_t size) {
         mem_init();
         first_call = 0;
     }
-
+    
+    // check if size requested = 0 or negative, and check if there is enough memory
+    if (num_free_bytes == 0 || num_free_bytes < size || size <=0) { 
+        return NULL;
+    }
+	
     // get first index of notInUse Array -- check in hashtable if enough size -> repeat until finds spot
     size_t key;
     size_t index = 0;
     size_t numberElements = returnNumberElements();
-    if (num_free_bytes == 0 || num_free_bytes < size) {
-        return NULL;
-    }
-
+	
     while (index < numberElements + 1) {
 
         // get key for available memory chunk

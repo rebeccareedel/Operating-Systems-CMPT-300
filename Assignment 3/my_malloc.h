@@ -82,5 +82,5 @@ void mem_init();
 
 void print_table();
 
-
+size_t getValue(size_t key);
 #endif

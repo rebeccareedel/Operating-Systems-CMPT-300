@@ -147,3 +147,8 @@ void my_free(void* free_ptr) {
 size_t checkNumBytesFree() {
     return num_free_bytes;
 }
+
+size_t getValue(size_t key){
+    printf("%ld", blockHeader[key].value);
+    return blockHeader[key].value;
+}

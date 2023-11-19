@@ -1,4 +1,4 @@
-// Rebecca Reedel, 301454910 Asmita Srivastava, -- Test Program for my_malloc.c
+// Rebecca Reedel 301454910, Asmita Srivastava 301436340 -- Test Program for my_malloc.c
 
 #include "my_malloc.h"
 #include <stdbool.h>
@@ -97,11 +97,45 @@ void test3(){
     int num_free4 = checkNumBytesFree();
 
     if(num_free == 192 && num_free2 == 208 && num_free3 == 224 && num_free4 == 256){
-        printf("\nTest 2: Allocating then Freeing: Number Free Bytes Correct -> Success");
+        printf("\nTest 3: Allocating then Freeing: Number Free Bytes Correct -> Success");
     }
     else{
-        printf("\nTest 2: Allocating then Freeing: Number Free Bytes Correct -> Failure");
+        printf("\nTest 3: Allocating then Freeing: Number Free Bytes Correct -> Failure");
     }
+}
+
+// allocates memory in order to check accuracy of coalesce property (Ability to merge contigous blocks of free memory)
+void test4(){
+    printf("\nAllocating 256 bytes\n");
+    void* ptr = my_malloc(4);
+    void* ptr1 = my_malloc(2);
+    void* ptr2 = my_malloc(250);
+    printf("\nNumber of free bytes = %li", checkNumBytesFree());
+    //print_table();
+    printf("\nFreeing 6 continguous bytes\n");
+    my_free(ptr);
+    my_free(ptr1);
+    printf("\nNumber of free bytes = %li", checkNumBytesFree());
+    printf("\nAttempting to allocate 6 new bytes: Should succeed due to Coalescence, merging adjacent free blocks!!\n");
+    void* ptr3 = my_malloc(6);
+    if (ptr3 == NULL){
+        printf("\nMemory allocation failed.\n");
+        exit(0);
+        }
+        else{
+            printf("\nMemory allocation successful. %d bytes allocated at address %p.\n", 6, ptr3);
+        }
+    printf("\nNumber of free bytes = %li", checkNumBytesFree());
+    printf("\nAttempting to allocate 6 more bytes: Should fail because not enough memory. Max. capacity reached!\n");
+    void* ptr4 = my_malloc(6);
+    if (ptr4 == NULL){
+        printf("\nMemory allocation failed.\n");
+        exit(0);
+        }
+        else{
+            printf("\nMemory allocation successful. %d bytes allocated at address %p.\n", 6, ptr4);
+        }  
+    
 }
 
 int main() {
@@ -114,6 +148,9 @@ int main() {
     mem_init();
 
     test3(); // tests allocation and free + checks number of headers in the queue
+    mem_init();
+
+    test4(); // tests coalesce property of merging adjacent free blocks to allocate memory successfully. 
 
     printf("\n---------------------------END OF TESTS-----------------------------\n");
 }

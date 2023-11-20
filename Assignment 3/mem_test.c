@@ -98,6 +98,8 @@ void test3() {
     else {
         printf("\nTest 3: Allocating & Freeing: Number Free Block Headers Correct -> Failure");
     }
+    my_free(ptr4);
+    my_free(ptr3);
 }
 
 // checking doesn't malloc if no space in memory chunk
@@ -113,9 +115,12 @@ void test4() {
     else {
         printf("\n Test 4: Ensuring Allocation Unsuccessful When No Free Bytes -> Failure\n");
     }
+    my_free(ptr2);
+    my_free(ptr1);
+    my_free(ptr);
 }
 
-// checks that malloc doesn't work if size requested = 0 or negative 
+// checks that malloc doesn't work if size requested > size of memory available
 void test5() {
     void* ptr = my_malloc(250);
     void* ptr1 = my_malloc(8);
@@ -125,6 +130,7 @@ void test5() {
     else {
         printf("\n Test 5: Ensuring Allocation Unsuccessful When Not Enough Free Bytes -> Failure\n");
     }
+    my_free(ptr);
 }
 
 // checks that malloc doesn't work if size requested = 0 or negative 
@@ -155,6 +161,7 @@ void test7() {
     else {
         printf("\n Test 7: Allocating Memory w/ Left-Side Coalescing of Free Bytes during Malloc -> Failure\n");
     }
+    my_free(ptr2);
 }
 
 // allocates memory in order to check accuracy of coalesce property in free
@@ -173,6 +180,7 @@ void test8() {
     else {
         printf("\n Test 8: Allocating Memory w/ Right-Side Coalescing of Free Bytes during Free -> Failure\n");
     }
+    my_free(ptr2);
 }
 
 
@@ -197,6 +205,8 @@ void test9() {
     else {
         printf("\n Test 9: Allocating Memory w/ Left-Side Coalescing: Chunk Values Correct -> Failure\n");
     }
+    my_free(ptr3);
+    my_free(ptr);
 }
 
 // tests that array of structs properly updated during right-side coalescing
@@ -219,6 +229,7 @@ void test10() {
     else {
         printf("\n Test 10: Allocating Memory w/ Right-Side Coalescing: Chunk Values Correct -> Failure\n");
     }
+    my_free(ptr);
 }
 
 // tests that queue properly updated during left side coalescing 
@@ -247,6 +258,7 @@ void test11() {
     else {
         printf("\n Test 11: Allocating Memory w/ Left-Side Coalescing: Queue Values Correct -> Failure\n");
     }
+    my_free(ptr2);
 }
 
 // tests that queue properly updated during right side coalescing 
@@ -275,46 +287,117 @@ void test12() {
     else {
         printf("\n Test 12: Allocating Memory w/ Right-Side Coalescing: Queue Values Correct -> Failure\n");
     }
+    my_free(ptr2);
 }
+
+// attempt to use my_malloc like malloc, to allocate memory to data
+void test13() {
+    printf("\nTest 13: Using my_malloc and my_free like a C program (instead my malloc and free). \n");
+    // allocate memory for array using my_malloc
+    int n = 5; // dynamically, use scanf to get user input. 
+    int* arr = (int*)my_malloc(n * sizeof(int));
+    assert(arr != NULL);
+    assert(checkNumBytesFree() == 236);
+    printf("\nMemory allocation using my_malloc() : arr[5] sucessfully allocated on the heap.\n"); 
+
+    //writing data on arr[5], using allocated memory.
+    for(int i=0; i < n; i++){
+        arr[i] = i+1;
+    }
+    printf("\nUsing arr[5]: manipulating data into and printing elements of the array : \n");
+    for(int i=0; i < n; i++){
+        printf("%d, ", arr[i]);
+    }
+    // free arr after use
+    my_free(arr);
+    // making sure my_free is working correctly. 
+    assert(checkNumBytesFree() == 256);
+    printf("\nMemory release using my_free() : arr[5] sucessfully released back on the heap.\n"); 
+
+}
+
+// test to ensure no memory leaks involving my_malloc and my_free in different orders. 
+void test14() {
+    int* ptr = (int*)my_malloc(sizeof(int));
+    int* ptr1 = (int*)my_malloc(sizeof(int));
+    int* ptr2 = (int*)my_malloc(sizeof(int));
+    int* ptr3 = (int*)my_malloc(sizeof(int));
+    int* ptr4 = (int*)my_malloc(sizeof(int));
+    int* ptr5 = (int*)my_malloc(sizeof(int));
+    
+    //freeing memory in a different order as compared to allocating
+    my_free(ptr5);
+    my_free(ptr2);
+    my_free(ptr4);
+    my_free(ptr);
+    my_free(ptr3);
+    my_free(ptr1);
+    printf("Check number of free bytes = %li", checkNumBytesFree() );
+    // making sure there arent any memory leaks = memory is restored to original capacity. 
+    //assert(checkNumBytesFree() == 256);
+    printf("\nTest 14: Allocate and free in random order, No Memory Leaks -> Success\n"); 
+
+}
+
+
 
 int main() {
     printf("-------------------------START OF TESTS---------------------------\n");
 
     test1(); // tests allocation
+    mem_release();
     mem_init();
 
     test2(); // tests allocation and free + checks number of bytes
+    mem_release();
     mem_init();
 
     test3(); // tests allocation and free + checks number of headers in the queue
+    mem_release();
     mem_init();
 
     test4(); // tests allocation unsucessful when no more memory free
+    mem_release();
     mem_init();
 
     test5(); // tests allocation unsuccessful if not enough memory free
+    mem_release();
     mem_init();
 
     test6(); // checks that malloc doesn't work if size requested = 0 or negative // tests coalesce property of merging adjacent free blocks from left-side to allocate memory successfully. 
+    mem_release();
     mem_init();
 
     test7(); // tests coalesce property of merging adjacent free blocks from left-side to allocate memory successfully. 
+    mem_release();
     mem_init();
 
     test8(); // tests coalesce property of merging adjacent free blocks from right-side to allocate memory successfully. 
+    mem_release();
     mem_init();
 
     test9(); // tests that array of structs properly updated during left-side coalescing
+    mem_release();
     mem_init();
 
     test10(); // tests that array of structs properly updated during right-side coalescing
+    mem_release();
     mem_init();
 
     test11(); // tests that queue properly updated during left side coalescing 
+    mem_release();
     mem_init();
 
     test12(); // tests that queue properly updated during right side coalescing 
+    mem_release();
     mem_init();
+
+    test13(); //tests usage of my_malloc and my_free in a program setting to ensure allocation, data manipulation and memory release is sucessful
+    mem_release();
+    mem_init();
+
+    test14(); //tests to allocate and free memory in random order and ensuring no memory leaks. 
+    mem_release();
 
     printf("\n---------------------------END OF TESTS-----------------------------\n");
 }

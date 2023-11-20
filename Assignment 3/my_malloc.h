@@ -80,6 +80,8 @@ size_t checkNumBytesFree();
 
 void mem_init();
 
+void mem_release();
+
 void print_table();
 
 size_t getValue(size_t key);

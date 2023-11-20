@@ -154,3 +154,10 @@ size_t getValue(size_t key) {
     printf("%ld", blockHeader[key].value);
     return blockHeader[key].value;
 }
+
+void mem_release() {
+    // get initial memory block -- 256 bytes
+    if (ptr != NULL){
+        free(ptr);
+    }
+}

@@ -3,7 +3,7 @@
 #include "my_malloc.h"
 #include "my_queue.h"
 #include <stdlib.h>
-#include <stdio.h>  /// ADD ERROR CHECKING: if requested memory = 0 or negative
+#include <stdio.h>  
 
 #define MAX_SIZE 256
 
@@ -49,17 +49,17 @@ void* my_malloc(size_t size) {
         mem_init();
         first_call = 0;
     }
-    
+
     // check if size requested = 0 or negative, and check if there is enough memory
-    if (num_free_bytes == 0 || num_free_bytes < size || size <=0) { 
+    if (num_free_bytes == 0 || num_free_bytes < size || size <= 0) {
         return NULL;
     }
-	
-    // get first index of notInUse Array -- check in hashtable if enough size -> repeat until finds spot
+
+    // get first index of notInUse Array -- check in array if enough size -> repeat until finds spot
     size_t key;
     size_t index = 0;
     size_t numberElements = returnNumberElements();
-	
+
     while (index < numberElements + 1) {
 
         // get key for available memory chunk
@@ -85,7 +85,9 @@ void* my_malloc(size_t size) {
                 blockHeader[key + size].value = new_val - size;
                 blockHeader[key + size].status = 2;
                 if (blockHeader[key + size].value != 0) {
-                    enqueue(key + size); // adds new avail memory chunk header to notInUse queue 
+                    if (size != old_value) {
+                        enqueue(key + size); // adds new avail memory chunk header to notInUse queue 
+                    }
                 }
                 num_free_bytes -= size; // decrease number of free bytes by amount just allocated
                 // returns pointer to start of allocated chunk
@@ -148,7 +150,7 @@ size_t checkNumBytesFree() {
     return num_free_bytes;
 }
 
-size_t getValue(size_t key){
+size_t getValue(size_t key) {
     printf("%ld", blockHeader[key].value);
     return blockHeader[key].value;
 }

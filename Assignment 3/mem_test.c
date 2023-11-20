@@ -107,7 +107,7 @@ void test4() {
     void* ptr1 = my_malloc(2);
     void* ptr2 = my_malloc(250);
     void* ptr3 = my_malloc(1); // should fail since not enough memory
-    if (ptr3 == NULL ) {
+    if (ptr3 == NULL) {
         printf("\n Test 4: Ensuring Allocation Unsuccessful When No Free Bytes -> Success\n");
     }
     else {
@@ -116,7 +116,7 @@ void test4() {
 }
 
 // checks that malloc doesn't work if size requested = 0 or negative 
-void test5(){
+void test5() {
     void* ptr = my_malloc(250);
     void* ptr1 = my_malloc(8);
     if (ptr1 == NULL) {
@@ -128,7 +128,7 @@ void test5(){
 }
 
 // checks that malloc doesn't work if size requested = 0 or negative 
-void test6(){
+void test6() {
     void* ptr = my_malloc(0);
     void* ptr1 = my_malloc(-5);
     if (ptr == NULL && ptr1 == NULL) {
@@ -177,8 +177,8 @@ void test8() {
 
 
 // tests that array of structs properly updated during left-side coalescing
-void test9(){
-    // allocate 256 bytes
+void test9() {
+    // allocate bytes
     void* ptr = my_malloc(4);
     void* ptr1 = my_malloc(2);
     void* ptr2 = my_malloc(8);
@@ -187,7 +187,7 @@ void test9(){
     my_free(ptr2);
     // should set key 4 to 252 and key 6 to 0 but since need to allocate 1 byte, 
     // will set key 4 = 1, key 5 = 251 and key 6 =0
-    void* ptr3 = my_malloc(1); 
+    void* ptr3 = my_malloc(1);
     // check if key 5 = 251 and key 6 = 0 in array after
     int key5 = getValue(5);
     int key6 = getValue(6);
@@ -200,8 +200,8 @@ void test9(){
 }
 
 // tests that array of structs properly updated during right-side coalescing
-void test10(){
-    // allocate 256 bytes
+void test10() {
+    // allocate bytes
     void* ptr = my_malloc(4);
     void* ptr1 = my_malloc(2);
     void* ptr2 = my_malloc(8);
@@ -220,9 +220,62 @@ void test10(){
         printf("\n Test 10: Allocating Memory w/ Right-Side Coalescing: Chunk Values Correct -> Failure\n");
     }
 }
+
 // tests that queue properly updated during left side coalescing 
+void test11() {
+    // allocate bytes
+    void* ptr = my_malloc(2);
+    void* ptr1 = my_malloc(2);// queue = 4
+    int arr1Num = returnNumberElements();
+    int arr1 = checkQueue(4, -1, -1);
+    display();
+    my_free(ptr); // queue = 4,0
+    int arr2Num = returnNumberElements();
+    int arr2 = checkQueue(4, 0, -1);
+    display();
+    my_free(ptr1); // queue = 4,0,2
+    int arr3Num = returnNumberElements();
+    int arr3 = checkQueue(4, 0, 2);
+    display();
+    void* ptr2 = my_malloc(2); // queue = 2
+    int arr4Num = returnNumberElements();
+    int arr4 = checkQueue(2, -1, -1);
+    display();
+    if (arr1 == 1 && arr1Num == 1 && arr2 == 1 && arr2Num == 2 && arr3 == 1 && arr3Num == 3 && arr4 == 1 && arr4Num == 1) {
+        printf("\n Test 11: Allocating Memory w/ Left-Side Coalescing: Queue Values Correct -> Success\n");
+    }
+    else {
+        printf("\n Test 11: Allocating Memory w/ Left-Side Coalescing: Queue Values Correct -> Failure\n");
+    }
+}
 
 // tests that queue properly updated during right side coalescing 
+void test12() {
+    // allocate bytes
+    void* ptr = my_malloc(2);
+    void* ptr1 = my_malloc(2);// queue = 4
+    int arr1Num = returnNumberElements();
+    int arr1 = checkQueue(4, -1, -1);
+    display();
+    my_free(ptr1); // queue = 4,2
+    int arr2Num = returnNumberElements();
+    int arr2 = checkQueue(4, 2, -1);
+    display();
+    my_free(ptr); // queue = 4,2,0
+    int arr3Num = returnNumberElements();
+    int arr3 = checkQueue(4, 2, 0);
+    display();
+    void* ptr2 = my_malloc(2); // queue = 2
+    int arr4Num = returnNumberElements();
+    int arr4 = checkQueue(2, -1, -1);
+    display();
+    if (arr1 == 1 && arr1Num == 1 && arr2 == 1 && arr2Num == 2 && arr3 == 1 && arr3Num == 3 && arr4 == 1 && arr4Num == 1) {
+        printf("\n Test 12: Allocating Memory w/ Right-Side Coalescing: Queue Values Correct -> Success\n");
+    }
+    else {
+        printf("\n Test 12: Allocating Memory w/ Right-Side Coalescing: Queue Values Correct -> Failure\n");
+    }
+}
 
 int main() {
     printf("-------------------------START OF TESTS---------------------------\n");
@@ -235,19 +288,19 @@ int main() {
 
     test3(); // tests allocation and free + checks number of headers in the queue
     mem_init();
-    
+
     test4(); // tests allocation unsucessful when no more memory free
     mem_init();
-   
+
     test5(); // tests allocation unsuccessful if not enough memory free
     mem_init();
 
     test6(); // checks that malloc doesn't work if size requested = 0 or negative // tests coalesce property of merging adjacent free blocks from left-side to allocate memory successfully. 
     mem_init();
-    
+
     test7(); // tests coalesce property of merging adjacent free blocks from left-side to allocate memory successfully. 
     mem_init();
-    
+
     test8(); // tests coalesce property of merging adjacent free blocks from right-side to allocate memory successfully. 
     mem_init();
 
@@ -257,9 +310,11 @@ int main() {
     test10(); // tests that array of structs properly updated during right-side coalescing
     mem_init();
 
-    // tests that queue properly updated during left side coalescing 
+    test11(); // tests that queue properly updated during left side coalescing 
+    mem_init();
 
-    // tests that queue properly updated during right side coalescing 
+    test12(); // tests that queue properly updated during right side coalescing 
+    mem_init();
 
     printf("\n---------------------------END OF TESTS-----------------------------\n");
 }

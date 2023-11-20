@@ -25,4 +25,7 @@ int returnNumberElements();
 // used to reset values between test runs
 void reset();
 
+// checks upto first 3 current queue values
+int checkQueue();
+
 #endif

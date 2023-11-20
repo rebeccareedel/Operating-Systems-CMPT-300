@@ -98,3 +98,18 @@ int returnNumberElements() {
     //display();
     return numberElements;
 }
+
+// checks up to first 3 elements in the queue
+int checkQueue(int a, int b, int c) {
+    int result = 1;
+    if (a != notInUse[front] && a != -1) {
+        result = 0;
+    }
+    if (b != notInUse[front + 1] && b != -1) {
+        result = 0;
+    }
+    if (c != notInUse[front + 2] && c != -1) {
+        result = 0;
+    }
+    return result;
+}

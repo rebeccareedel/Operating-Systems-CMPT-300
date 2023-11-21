@@ -36,7 +36,7 @@ int isEmpty() {
 // adds available memory chunk key to queue
 size_t enqueue(size_t key) {
     if (isFull()) {
-        printf("\n queue is full!! \n");
+        //printf("\n queue is full!! \n");
         return -1;
     }
     else {
@@ -45,7 +45,7 @@ size_t enqueue(size_t key) {
         }
         rear = (rear + 1) % MAX_SIZE;
         notInUse[rear] = key;
-        printf("\n inserted into queue at back-> %li", key);
+        //printf("\n inserted into queue at back-> %li", key);
         numberElements += 1;
     }
     return 0;
@@ -56,7 +56,7 @@ size_t enqueue(size_t key) {
 size_t dequeue() {
     size_t key;
     if (isEmpty()) {
-        printf("\n queue is empty !! \n");
+        //printf("\n queue is empty !! \n");
         return (-1);
     }
     else {
@@ -71,7 +71,7 @@ size_t dequeue() {
             front = (front + 1) % MAX_SIZE;
         }
         numberElements -= 1;
-        printf("\n removed element from queue-> %ld \n", key);
+        //printf("\n removed element from queue-> %ld \n", key);
         return (key);
     }
 }

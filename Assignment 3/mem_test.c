@@ -26,11 +26,11 @@ void test1() {
 
     if (&ptr1 == &ptr + 1 && &ptr2 == &ptr + 2) {
         if (ptr == (int*)2 && ptr1 == (int*)6 && ptr2 == (int*)235) {
-            printf("\nTest 1: Allocating Memory and Checking pointer values -> Success");
+            printf("\n Test 1:  Allocating Memory and Checking pointer values                         -> Success");
         }
     }
     else {
-        printf("\nTest 1: Allocating Memory and Checking pointer values -> Failure");
+        printf("\n Test 1:  Allocating Memory and Checking pointer values                         -> Failure");
     }
 }
 
@@ -63,10 +63,10 @@ void test2() {
     int num_free4 = checkNumBytesFree();
 
     if (num_free == 192 && num_free2 == 208 && num_free3 == 224 && num_free4 == 256) {
-        printf("\nTest 2: Allocating then Freeing: Number Free Bytes Correct -> Success");
+        printf("\n Test 2:  Allocating then Freeing: Number Free Bytes Correct                    -> Success");
     }
     else {
-        printf("\nTest 2: Allocating then Freeing: Number Free Bytes Correct -> Failure");
+        printf("\n Test 2:  Allocating then Freeing: Number Free Bytes Correct                    -> Failure");
     }
 }
 
@@ -93,10 +93,10 @@ void test3() {
     int num_block4 = returnNumberElements();
 
     if (num_block == 1 && num_block2 == 2 && num_block3 == 2 && num_block4 == 2) {
-        printf("\nTest 3: Allocating & Freeing: Number Free Block Headers Correct -> Success");
+        printf("\n Test 3:  Allocating & Freeing: Number Free Block Headers Correct               -> Success");
     }
     else {
-        printf("\nTest 3: Allocating & Freeing: Number Free Block Headers Correct -> Failure");
+        printf("\n Test 3:  Allocating & Freeing: Number Free Block Headers Correct               -> Failure");
     }
     my_free(ptr4);
     my_free(ptr3);
@@ -110,10 +110,10 @@ void test4() {
     void* ptr2 = my_malloc(250);
     void* ptr3 = my_malloc(1); // should fail since not enough memory
     if (ptr3 == NULL) {
-        printf("\n Test 4: Ensuring Allocation Unsuccessful When No Free Bytes -> Success\n");
+        printf("\n Test 4:  Ensuring Allocation Unsuccessful When No Free Bytes                   -> Success");
     }
     else {
-        printf("\n Test 4: Ensuring Allocation Unsuccessful When No Free Bytes -> Failure\n");
+        printf("\n Test 4:  Ensuring Allocation Unsuccessful When No Free Bytes                   -> Failure");
     }
     my_free(ptr2);
     my_free(ptr1);
@@ -125,10 +125,10 @@ void test5() {
     void* ptr = my_malloc(250);
     void* ptr1 = my_malloc(8);
     if (ptr1 == NULL) {
-        printf("\n Test 5: Ensuring Allocation Unsuccessful When Not Enough Free Bytes -> Success\n");
+        printf("\n Test 5:  Ensuring Allocation Unsuccessful When Not Enough Free Bytes           -> Success");
     }
     else {
-        printf("\n Test 5: Ensuring Allocation Unsuccessful When Not Enough Free Bytes -> Failure\n");
+        printf("\n Test 5:  Ensuring Allocation Unsuccessful When Not Enough Free Bytes           -> Failure");
     }
     my_free(ptr);
 }
@@ -138,10 +138,10 @@ void test6() {
     void* ptr = my_malloc(0);
     void* ptr1 = my_malloc(-5);
     if (ptr == NULL && ptr1 == NULL) {
-        printf("\n Test 6: Ensuring Allocation Unsuccessful When Given 0 or Negative Values -> Success\n");
+        printf("\n Test 6:  Ensuring Allocation Unsuccessful When Given 0 or Negative Values      -> Success");
     }
     else {
-        printf("\n Test 6: Ensuring Allocation Unsuccessful When Given 0 or Negative Values -> Failure\n");
+        printf("\n Test 6:  Ensuring Allocation Unsuccessful When Given 0 or Negative Values      -> Failure");
     }
 }
 
@@ -156,10 +156,10 @@ void test7() {
     my_free(ptr1);
     void* ptr3 = my_malloc(6); // should allocate due to left-side coalescing during malloc
     if (ptr3 != NULL) {
-        printf("\n Test 7: Allocating Memory w/ Left-Side Coalescing of Free Bytes during Malloc -> Success\n");
+        printf("\n Test 7:  Allocating Memory w/ Left-Side Coalescing of Free Bytes during Malloc -> Success");
     }
     else {
-        printf("\n Test 7: Allocating Memory w/ Left-Side Coalescing of Free Bytes during Malloc -> Failure\n");
+        printf("\n Test 7:  Allocating Memory w/ Left-Side Coalescing of Free Bytes during Malloc -> Failure");
     }
     my_free(ptr2);
 }
@@ -175,10 +175,10 @@ void test8() {
     my_free(ptr);
     void* ptr3 = my_malloc(6); // should allocate due to right-side coalescing during free
     if (ptr3 != NULL) {
-        printf("\n Test 8: Allocating Memory w/ Right-Side Coalescing of Free Bytes during Free -> Success\n");
+        printf("\n Test 8:  Allocating Memory w/ Right-Side Coalescing of Free Bytes during Free  -> Success");
     }
     else {
-        printf("\n Test 8: Allocating Memory w/ Right-Side Coalescing of Free Bytes during Free -> Failure\n");
+        printf("\n Test 8:  Allocating Memory w/ Right-Side Coalescing of Free Bytes during Free  -> Failure");
     }
     my_free(ptr2);
 }
@@ -200,10 +200,10 @@ void test9() {
     int key5 = getValue(5);
     int key6 = getValue(6);
     if (key5 == 251 && key6 == 0) {
-        printf("\n Test 9: Allocating Memory w/ Left-Side Coalescing: Chunk Values Correct -> Success\n");
+        printf("\n Test 9:  Allocating Memory w/ Left-Side Coalescing: Chunk Values Correct       -> Success");
     }
     else {
-        printf("\n Test 9: Allocating Memory w/ Left-Side Coalescing: Chunk Values Correct -> Failure\n");
+        printf("\n Test 9:  Allocating Memory w/ Left-Side Coalescing: Chunk Values Correct       -> Failure");
     }
     my_free(ptr3);
     my_free(ptr);
@@ -224,10 +224,10 @@ void test10() {
     int key4 = getValue(4);
     int key6second = getValue(6);
     if (key6first == 250 && key14 == 0 && key4 == 252 && key6second == 0) {
-        printf("\n Test 10: Allocating Memory w/ Right-Side Coalescing: Chunk Values Correct -> Success\n");
+        printf("\n Test 10: Allocating Memory w/ Right-Side Coalescing: Chunk Values Correct      -> Success");
     }
     else {
-        printf("\n Test 10: Allocating Memory w/ Right-Side Coalescing: Chunk Values Correct -> Failure\n");
+        printf("\n Test 10: Allocating Memory w/ Right-Side Coalescing: Chunk Values Correct      -> Failure");
     }
     my_free(ptr);
 }
@@ -239,24 +239,20 @@ void test11() {
     void* ptr1 = my_malloc(2);// queue = 4
     int arr1Num = returnNumberElements();
     int arr1 = checkQueue(4, -1, -1);
-    display();
     my_free(ptr); // queue = 4,0
     int arr2Num = returnNumberElements();
     int arr2 = checkQueue(4, 0, -1);
-    display();
     my_free(ptr1); // queue = 4,0,2
     int arr3Num = returnNumberElements();
     int arr3 = checkQueue(4, 0, 2);
-    display();
     void* ptr2 = my_malloc(2); // queue = 2
     int arr4Num = returnNumberElements();
     int arr4 = checkQueue(2, -1, -1);
-    display();
     if (arr1 == 1 && arr1Num == 1 && arr2 == 1 && arr2Num == 2 && arr3 == 1 && arr3Num == 3 && arr4 == 1 && arr4Num == 1) {
-        printf("\n Test 11: Allocating Memory w/ Left-Side Coalescing: Queue Values Correct -> Success\n");
+        printf("\n Test 11: Allocating Memory w/ Left-Side Coalescing: Queue Values Correct       -> Success");
     }
     else {
-        printf("\n Test 11: Allocating Memory w/ Left-Side Coalescing: Queue Values Correct -> Failure\n");
+        printf("\n Test 11: Allocating Memory w/ Left-Side Coalescing: Queue Values Correct       -> Failure");
     }
     my_free(ptr2);
 }
@@ -268,56 +264,53 @@ void test12() {
     void* ptr1 = my_malloc(2);// queue = 4
     int arr1Num = returnNumberElements();
     int arr1 = checkQueue(4, -1, -1);
-    display();
     my_free(ptr1); // queue = 4,2
     int arr2Num = returnNumberElements();
     int arr2 = checkQueue(4, 2, -1);
-    display();
     my_free(ptr); // queue = 4,2,0
     int arr3Num = returnNumberElements();
     int arr3 = checkQueue(4, 2, 0);
-    display();
     void* ptr2 = my_malloc(2); // queue = 2
     int arr4Num = returnNumberElements();
     int arr4 = checkQueue(2, -1, -1);
-    display();
     if (arr1 == 1 && arr1Num == 1 && arr2 == 1 && arr2Num == 2 && arr3 == 1 && arr3Num == 3 && arr4 == 1 && arr4Num == 1) {
-        printf("\n Test 12: Allocating Memory w/ Right-Side Coalescing: Queue Values Correct -> Success\n");
+        printf("\n Test 12: Allocating Memory w/ Right-Side Coalescing: Queue Values Correct      -> Success");
     }
     else {
-        printf("\n Test 12: Allocating Memory w/ Right-Side Coalescing: Queue Values Correct -> Failure\n");
+        printf("\n Test 12: Allocating Memory w/ Right-Side Coalescing: Queue Values Correct      -> Failure");
     }
     my_free(ptr2);
 }
 
 // attempt to use my_malloc like malloc, to allocate memory to data
-void test13() {
-    printf("\nTest 13: Using my_malloc and my_free like a C program (instead my malloc and free). \n");
+int test13() {
     // allocate memory for array using my_malloc
     int n = 5; // dynamically, use scanf to get user input. 
     int* arr = (int*)my_malloc(n * sizeof(int));
     assert(arr != NULL);
     assert(checkNumBytesFree() == 236);
-    printf("\nMemory allocation using my_malloc() : arr[5] sucessfully allocated on the heap.\n"); 
+    //printf("\nMemory allocation using my_malloc() : arr[5] sucessfully allocated on the heap.\n"); 
 
     //writing data on arr[5], using allocated memory.
     for(int i=0; i < n; i++){
         arr[i] = i+1;
     }
-    printf("\nUsing arr[5]: manipulating data into and printing elements of the array : \n");
-    for(int i=0; i < n; i++){
-        printf("%d, ", arr[i]);
-    }
+    //printf("\nUsing arr[5]: manipulating data into and printing elements of the array : \n");
+    //for(int i=0; i < n; i++){
+        //printf("%d, ", arr[i]);
+    //}
     // free arr after use
     my_free(arr);
     // making sure my_free is working correctly. 
     assert(checkNumBytesFree() == 256);
-    printf("\nMemory release using my_free() : arr[5] sucessfully released back on the heap.\n"); 
+    //printf("\nMemory release using my_free() : arr[5] sucessfully released back on the heap.\n"); 
+    printf("\n Test 13: Using my_malloc and my_free like a C program                          -> Success");
+    
 
 }
 
 // test to ensure no memory leaks involving my_malloc and my_free in different orders. 
-void test14() {
+int test14() {
     int* ptr = (int*)my_malloc(sizeof(int));
     int* ptr1 = (int*)my_malloc(sizeof(int));
     int* ptr2 = (int*)my_malloc(sizeof(int));
@@ -332,10 +325,10 @@ void test14() {
     my_free(ptr);
     my_free(ptr3);
     my_free(ptr1);
-    printf("Check number of free bytes = %li", checkNumBytesFree() );
+    //printf("Check number of free bytes = %li", checkNumBytesFree() );
     // making sure there arent any memory leaks = memory is restored to original capacity. 
-    //assert(checkNumBytesFree() == 256);
-    printf("\nTest 14: Allocate and free in random order, No Memory Leaks -> Success\n"); 
+    assert(checkNumBytesFree() == 256);
+    printf("\n Test 14: Allocate and free in random order, No Memory Leaks                    -> Success\n"); 
 
 }
 

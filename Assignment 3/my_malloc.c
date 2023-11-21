@@ -119,7 +119,7 @@ void* my_malloc(size_t size) {
         }
         index += 1;
     }
-    printf("\nNot enough memory, consider freeing some space. Cannot allocate more memory. \n");
+    //printf("\nNot enough memory, consider freeing some space. Cannot allocate more memory. \n");
     return NULL;
 }
 
@@ -151,7 +151,7 @@ size_t checkNumBytesFree() {
 }
 
 size_t getValue(size_t key) {
-    printf("%ld", blockHeader[key].value);
+    //printf("%ld", blockHeader[key].value);
     return blockHeader[key].value;
 }
 

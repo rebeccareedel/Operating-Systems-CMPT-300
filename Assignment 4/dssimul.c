@@ -6,7 +6,6 @@
 #include <assert.h> 
 
 #define n 50
-#define range 199
 
 // Shortest Seek Time First -- chooses request next closest to head -> not fair 
 void sstf(int arr){
@@ -19,20 +18,24 @@ void scan(int arr){
 }
 
 void createRandomList(int **result_list){
+    // used to check if random number already used
+    int arr[200];
+
     // create list to hold values
     *result_list = (int*)malloc(n * sizeof(int));
-    int in, im;
-
-    im = 0;
-
-    for (in = 0; in < range && im < n; ++in) {
-    int rn = range - in;
-    int rm = n - im;
-    if (rand() % rn < rm)    
-        /* Take it */
-        result_list[im++] = &in; /* +1 since your range begins from 1 */
+    
+    // get random numbers for list
+    for (int i =0; i < n ; i++) {
+        // get new random number
+        int new_num = rand()%199;
+        // keep running until finds free random number
+        while(arr[new_num]==1){
+            new_num = rand()%199; // set to new number each loop
+        }
+        arr[new_num] = 1; //set to status = busy
+        (*result_list)[i] = new_num; // add number to list index
     }
-    assert(im == n);
+    
 }
 
 void convertToList(char* str, int* num_elem, int **result_list){
@@ -48,7 +51,7 @@ void convertToList(char* str, int* num_elem, int **result_list){
     int nextNumber = 0;  // holds next int to add to list, used to create ints from 1 digit to 3
     
     for (char* current = str; *current != '\0'; current++) {
-        if (*current == ',') // current = deliminter
+        if (*current == ',') // current = delimiter
         {   
             // make sure integer input in [0,199] range
             if(nextNumber <0 || nextNumber > 199){
@@ -59,14 +62,19 @@ void convertToList(char* str, int* num_elem, int **result_list){
             *num_elem += 1;
             *result_list = realloc(*result_list, *num_elem * sizeof(int)); // allocate more space
             nextNumber = 0;  // set to 0 for next value
-        } else {
+        } 
+        else if (nextNumber == ' '){ // check for spaces
+            fprintf(stderr,"Please provide integers in [0,199] range: with NO SPACES \n");
+            exit(1);
+        }
+        else {
             // converts from string to int, using ASCII manipulation
             nextNumber = nextNumber * 10 + (*current - '0'); 
         }
     }
     // make sure integer input in [0,199] range
     if(nextNumber <0 || nextNumber > 199){
-        fprintf(stderr,"Please provide integers in [0,199] range \n");
+        fprintf(stderr,"Please provide integers in [0,199] range, no spaces\n");
         exit(1);
     }
     // add the last int
@@ -75,7 +83,7 @@ void convertToList(char* str, int* num_elem, int **result_list){
     // check number of elements, if <3 call make random
     if(*num_elem <3){
         // ERROR
-        fprintf(stderr,"Please provide atleast 3 unique tracks within the range [0,199]: \n");
+        fprintf(stderr,"Please provide atleast 3 unique tracks within the range [0,199], no spaces: \n");
         exit(1);
     }
 }

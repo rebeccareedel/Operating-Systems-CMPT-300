@@ -6,14 +6,65 @@
 #include <assert.h> 
 
 #define n 50
+struct block
+{
+    size_t value; // memory in chunk
+};
+struct block diff_table[200];
 
 // Shortest Seek Time First -- chooses request next closest to head -> not fair 
-void sstf(int arr){
+void sstf(int* arr, int num_elem){
+    printf("Request List of track numbers\n");
+    for( int i = 0; i < num_elem; i ++){
+            printf("%d\n", arr[i]);
+    }
+    // set track number to first index of arr
+    int head = arr[0];
+    int next_index;
+    int min_diff = 200;
+    int next_head = 0;
+    int i = 0;
+    int count = 0;
+    printf("Service list: ");
+    while(count < num_elem){
+        for(int i= 1; i<n; i++){
+            if(abs(head - arr[i]) < min_diff){
+            min_diff = abs(head - arr[i]);
+            next_head = i;
+            }
+        }
+        head = arr[next_head];
+        printf("%d\n ", head);
+        arr[next_head] = 500;
+        count++;
+    }
+}
 
+// Shortest Seek Time First -- chooses request next closest to head -> not fair 
+void sstf2(int* arr, int num_elem){
+    printf("Request List of track numbers\n");
+    for( int i = 0; i < num_elem; i ++){
+            printf("%d\n", arr[i]);
+    }
+    printf("Service List : \n");
+    // set track number to first index of arr
+    int head = arr[0];
+    for(int i=0; i<num_elem; i++){
+        int min_diff = 200;
+        if(abs(head - arr[i+1]) < min_diff){
+            min_diff = abs(head - arr[i+1]);
+            diff_table[min_diff].value = arr[i+1];
+            }
+        //get rid of previous head/processed request
+        printf("%d\n", head);
+        arr[i] = arr[i+1]; 
+        num_elem--;
+        head = diff_table[min_diff].value; //make new head
+    }
 }
 
 // Scan -- heads keeps moving back and forth across disk -> prevents starvation, middle passed 2x more than end
-void scan(int arr){
+void scan(int* arr, int num_elem){
 
 }
 
@@ -95,19 +146,18 @@ int main(int argc, char* argv[]) {
     if(argc > 1){
         // split by comma, pass as int, put each in list
         convertToList(argv[1], &num_elem, &current_list);
-        for( int i = 0; i < num_elem; i ++){
-            printf("%d\n", current_list[i]);
-        }
         
     }
     else{
         // make list of 50 random integers
         createRandomList(&current_list);
         num_elem = n;
-        for( int i = 0; i < num_elem; i ++){
-            printf("%d\n", current_list[i]);
-        }
     }
+
+    
+    // call sstf
+    sstf2(current_list, num_elem);
+
     free(current_list);
     return 0;
 }

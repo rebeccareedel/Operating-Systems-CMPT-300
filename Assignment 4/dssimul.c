@@ -14,30 +14,41 @@ struct block diff_table[200];
 
 // Shortest Seek Time First -- chooses request next closest to head -> not fair 
 void sstf(int* arr, int num_elem){
-    printf("Request List of track numbers\n");
+  printf("Initial Request List of track numbers\n");
     for( int i = 0; i < num_elem; i ++){
             printf("%d\n", arr[i]);
     }
+    
     // set track number to first index of arr
-    int head = arr[0];
-    int next_index;
+    int traverse_list[num_elem];
+    traverse_list[0] = arr[0];
+    
+    int head = 0;
     int min_diff = 200;
     int next_head = 0;
-    int i = 0;
-    int count = 0;
-    printf("Service list: ");
+    int count = 1;
+    int total_tracks;
+    
     while(count < num_elem){
-        for(int i= 1; i<n; i++){
-            if(abs(head - arr[i]) < min_diff){
-            min_diff = abs(head - arr[i]);
-            next_head = i;
+        for(int i= 1; i<num_elem; i++){
+            if(abs(arr[head] - arr[i]) < min_diff && head != i ){
+            	min_diff = abs(arr[head] - arr[i]);
+            	next_head = i;
             }
         }
-        head = arr[next_head];
-        printf("%d\n ", head);
-        arr[next_head] = 500;
+        arr[head] = 500;
+        head = next_head;
+        traverse_list[count] = arr[head];
+        total_tracks += min_diff;
+        min_diff = 201;
         count++;
     }
+    printf("Final Traverse List of track numbers\n");
+    for( int i = 0; i < num_elem; i ++){
+            printf("%d\n", traverse_list[i]);
+    }
+    
+    printf("Total number of tracks passed %d\n", total_tracks);
 }
 
 // Shortest Seek Time First -- chooses request next closest to head -> not fair 
@@ -156,7 +167,7 @@ int main(int argc, char* argv[]) {
 
     
     // call sstf
-    sstf2(current_list, num_elem);
+    sstf(current_list, num_elem);
 
     free(current_list);
     return 0;

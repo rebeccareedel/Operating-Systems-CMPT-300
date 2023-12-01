@@ -6,17 +6,16 @@
 #include <assert.h> 
 
 #define n 50
-struct block
-{
-    size_t value; // memory in chunk
-};
-struct block diff_table[200];
+
 
 // Shortest Seek Time First -- chooses request next closest to head -> not fair 
 void sstf(int* arr, int num_elem){
-  printf("Initial Request List of track numbers\n");
+
+    int request_list[num_elem];
+    printf("Initial Request List of track numbers =>\n");
     for( int i = 0; i < num_elem; i ++){
-            printf("%d\n", arr[i]);
+            request_list[i] = arr[i];
+            printf("%d ", arr[i]);
     }
     
     // set track number to first index of arr
@@ -27,8 +26,8 @@ void sstf(int* arr, int num_elem){
     int min_diff = 200;
     int next_head = 0;
     int count = 1;
-    int total_tracks;
-    
+    int total_tracks = 0;
+
     while(count < num_elem){
         for(int i= 1; i<num_elem; i++){
             if(abs(arr[head] - arr[i]) < min_diff && head != i ){
@@ -43,36 +42,42 @@ void sstf(int* arr, int num_elem){
         min_diff = 201;
         count++;
     }
-    printf("Final Traverse List of track numbers\n");
+    printf("\nFinal Traverse List of track numbers =>\n");
     for( int i = 0; i < num_elem; i ++){
-            printf("%d\n", traverse_list[i]);
+            printf("%d ", traverse_list[i]);
     }
+    printf("\nTotal number of tracks passed =  %d \n", total_tracks);
+
+    //For longest delay - find the max shifted index
+    int longest_delay = 0;
+    int delay[num_elem]; // record the delays in all elements
+    int num_delays = 0;
+    int average_delay = 0;
+    for(int i= 0;i<num_elem;i++){
+        delay[i] = 0;
+        for(int j=0;j<num_elem;j++){
+            if(request_list[i] == traverse_list[j]){
+                //where the delay occurs, find the shifted index
+                delay[i] = j-i; //with respect to the original index, how shifted is the new index? 
+                break;
+            }
+        }
+        if(delay[i] > longest_delay){
+            longest_delay = delay[i]; //longest shifted index
+        }
+        //printf("%d ", delay[i]);
+        if(delay[i]>0){ //only positively shifted index
+            num_delays++;
+            average_delay += delay[i];
+        }
+    }
+    printf("Longest Delay =  %d \n", longest_delay);
+    printf("Average Delay =  %d \n", average_delay/num_delays);
     
-    printf("Total number of tracks passed %d\n", total_tracks);
+
 }
 
-// Shortest Seek Time First -- chooses request next closest to head -> not fair 
-void sstf2(int* arr, int num_elem){
-    printf("Request List of track numbers\n");
-    for( int i = 0; i < num_elem; i ++){
-            printf("%d\n", arr[i]);
-    }
-    printf("Service List : \n");
-    // set track number to first index of arr
-    int head = arr[0];
-    for(int i=0; i<num_elem; i++){
-        int min_diff = 200;
-        if(abs(head - arr[i+1]) < min_diff){
-            min_diff = abs(head - arr[i+1]);
-            diff_table[min_diff].value = arr[i+1];
-            }
-        //get rid of previous head/processed request
-        printf("%d\n", head);
-        arr[i] = arr[i+1]; 
-        num_elem--;
-        head = diff_table[min_diff].value; //make new head
-    }
-}
+
 
 // Scan -- heads keeps moving back and forth across disk -> prevents starvation, middle passed 2x more than end
 void scan(int* arr, int num_elem){

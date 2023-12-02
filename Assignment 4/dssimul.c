@@ -20,26 +20,26 @@ void sstf(int* arr, int num_elem){
     
     // set track number to first index of arr
     int traverse_list[num_elem];
-    traverse_list[0] = arr[0];
+    traverse_list[0] = request_list[0];
     
     int head = 0;
-    int min_diff = 200;
+    int min_diff = 202;
     int next_head = 0;
     int count = 1;
     int total_tracks = 0;
 
     while(count < num_elem){
         for(int i= 1; i<num_elem; i++){
-            if(abs(arr[head] - arr[i]) < min_diff && head != i ){
-            	min_diff = abs(arr[head] - arr[i]);
+            if(abs(request_list[head] - request_list[i]) < min_diff && head != i ){
+            	min_diff = abs(request_list[head] - request_list[i]);
             	next_head = i;
             }
         }
-        arr[head] = 500;
+        request_list[head] = 500;
         head = next_head;
-        traverse_list[count] = arr[head];
+        traverse_list[count] = request_list[head];
         total_tracks += min_diff;
-        min_diff = 201;
+        min_diff = 202;
         count++;
     }
     printf("\nFinal Traverse List of track numbers =>\n");
@@ -56,7 +56,7 @@ void sstf(int* arr, int num_elem){
     for(int i= 0;i<num_elem;i++){
         delay[i] = 0;
         for(int j=0;j<num_elem;j++){
-            if(request_list[i] == traverse_list[j]){
+            if(arr[i] == traverse_list[j]){
                 //where the delay occurs, find the shifted index
                 delay[i] = j-i; //with respect to the original index, how shifted is the new index? 
                 break;
@@ -77,12 +77,132 @@ void sstf(int* arr, int num_elem){
 
 }
 
-
-
 // Scan -- heads keeps moving back and forth across disk -> prevents starvation, middle passed 2x more than end
 void scan(int* arr, int num_elem){
 
+    int request_list[num_elem];
+    printf("Initial Request List of track numbers =>\n");
+    for( int i = 0; i < num_elem; i ++){
+            request_list[i] = arr[i];
+            printf("%d ", arr[i]);
+    }
+    
+    // set track number to first index of arr
+    int traverse_list[num_elem];
+    traverse_list[0] = request_list[0];
+    
+    int head = 0;
+    int min_diff = 202;
+    int next_head = 0;
+    int count = 1;
+    int travel_left = 1; // used to determine which way algorithm goes
+    int total_tracks = 0;
+
+    while(count < num_elem){
+
+        // used to travel left
+        while(travel_left == 1){
+            for(int i= 1; i<num_elem; i++){
+                if(request_list[head] > request_list[i]){
+                    if(request_list[head] - request_list[i] < min_diff && head != i ){
+                        min_diff = request_list[head] - request_list[i];
+                        next_head = i;
+                    }
+                }
+            }
+            if(min_diff == 201){// check if no more nodes to the left
+                //calculate remaining tracks to 0
+                total_tracks += request_list[head]; // since goes to zero should be the heads distnace from 0
+                request_list[head] = 500;
+                travel_left = 0; //set to false, so goes right next
+                min_diff = 201;
+                head = 0;
+            }
+            else{
+                request_list[head] = 500;
+                head = next_head;
+                traverse_list[count] = request_list[head];
+                total_tracks += min_diff;
+                min_diff = 201;
+                count++;
+            }
+        }
+        // used to travel right
+        while(travel_left == 0){
+           for(int i=1; i<num_elem; i++){
+                if(request_list[head] < request_list[i]){
+                    if(request_list[i] - request_list[head] < min_diff && head != i ){
+                        min_diff = request_list[head] - request_list[i];
+                        next_head = i;
+                    }
+                }
+            }
+            if(min_diff == 201){// check if no more nodes to the left
+                //calculate remaining tracks to 0
+                total_tracks += 199-request_list[head]; // since goes to zero should be the heads distnace from 0
+                request_list[head] = 500;
+                travel_left = 1; //set to false, so goes right next
+                head = 199;
+                min_diff = 201;
+            }
+            else{
+                request_list[head] = 500;
+                head = next_head;
+                traverse_list[count] = request_list[head];
+                total_tracks += min_diff;
+                min_diff = 201;
+                count++;
+            }
+        }  
+    }
+    printf("\nFinal Traverse List of track numbers =>\n");
+    for( int i = 0; i < num_elem; i ++){
+            printf("%d ", traverse_list[i]);
+    }
+    printf("\nTotal number of tracks passed =  %d \n", total_tracks);
+
 }
+
+void scan2(int* arr, int num_elem){
+
+    int request_list[num_elem];
+    int traverse_list[num_elem];
+    printf("Initial Request List of track numbers =>\n");
+    for( int i = 0; i < num_elem; i ++){
+            request_list[i] = arr[i];
+            printf("%d ", arr[i]);
+    }
+    int left = 0;
+    int head = request_list[0];
+    int j,temp;
+    if(left+1 < num_elem)
+    {
+        int pivot = left;
+        j=left+1;
+        for(int i=left+1;i<num_elem;++i)
+        {
+            if(request_list[i]<request_list[pivot])
+            {
+                temp=request_list[i];
+                request_list[i]=request_list[j];
+                request_list[j]=temp;
+                j++;
+            }
+
+        }   
+        temp=request_list[j-1];
+        request_list[j-1]=request_list[pivot];
+        request_list[pivot]=temp;
+
+    }
+    traverse_list[0] = head;
+    
+    printf("Update Request List of track numbers =>\n");
+    for( int i = 0; i < num_elem; i ++){
+        printf("%d ", request_list[i]);
+    }
+}
+
 
 void createRandomList(int **result_list){
     // used to check if random number already used
@@ -173,6 +293,9 @@ int main(int argc, char* argv[]) {
     
     // call sstf
     sstf(current_list, num_elem);
+    
+    // call scan
+    scan(current_list, num_elem);
 
     free(current_list);
     return 0;

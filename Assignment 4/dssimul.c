@@ -54,11 +54,11 @@ void sstf(int* arr, int num_elem){
     int num_delays = 0;
     int average_delay = 0;
     for(int i= 0;i<num_elem;i++){
-        delay[i] = 0;
+        delay[i] = 0; //head has no delay while servicing request
         for(int j=0;j<num_elem;j++){
             if(arr[i] == traverse_list[j]){
                 //where the delay occurs, find the shifted index
-                delay[i] = j-i; //with respect to the original index, how shifted is the new index? 
+                delay[i] = j-i; //with respect to the original index, how shifted to the right is the new index? 
                 break;
             }
         }
@@ -66,7 +66,7 @@ void sstf(int* arr, int num_elem){
             longest_delay = delay[i]; //longest shifted index
         }
         //printf("%d ", delay[i]);
-        if(delay[i]>0){ //only positively shifted index
+        if(delay[i]>0){ //only positively shifted index (shifted to the right)
             num_delays++;
             average_delay += delay[i];
         }
@@ -169,8 +169,8 @@ void scan2(int* arr, int num_elem){
     int traverse_list[num_elem];
     printf("Initial Request List of track numbers =>\n");
     for( int i = 0; i < num_elem; i ++){
-            request_list[i] = arr[i];
-            printf("%d ", arr[i]);
+        request_list[i] = arr[i];
+        printf("%d ", arr[i]);
     }
     int left = 0;
     int head = request_list[0];

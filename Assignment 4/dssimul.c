@@ -79,7 +79,6 @@ void sstf(int* arr, int num_elem){
 
 // Scan -- heads keeps moving back and forth across disk -> prevents starvation, middle passed 2x more than end
 void scan(int* arr, int num_elem){
-
     int request_list[num_elem];
     printf("Initial Request List of track numbers =>\n");
     for( int i = 0; i < num_elem; i ++){
@@ -102,6 +101,7 @@ void scan(int* arr, int num_elem){
 
         // used to travel left
         while(travel_left == 1){
+            
             for(int i= 1; i<num_elem; i++){
                 if(request_list[head] > request_list[i]){
                     if(request_list[head] - request_list[i] < min_diff && head != i ){
@@ -110,47 +110,46 @@ void scan(int* arr, int num_elem){
                     }
                 }
             }
-            if(min_diff == 201){// check if no more nodes to the left
+            if(next_head == head || count == num_elem){// check if no more nodes to the left
                 //calculate remaining tracks to 0
                 total_tracks += request_list[head]; // since goes to zero should be the heads distnace from 0
-                request_list[head] = 500;
                 travel_left = 0; //set to false, so goes right next
-                min_diff = 201;
-                head = 0;
+                min_diff = 202;
+                request_list[head]=0;
             }
             else{
                 request_list[head] = 500;
                 head = next_head;
                 traverse_list[count] = request_list[head];
                 total_tracks += min_diff;
-                min_diff = 201;
+                min_diff = 202;
                 count++;
             }
         }
         // used to travel right
         while(travel_left == 0){
+            
            for(int i=1; i<num_elem; i++){
                 if(request_list[head] < request_list[i]){
                     if(request_list[i] - request_list[head] < min_diff && head != i ){
-                        min_diff = request_list[head] - request_list[i];
+                        min_diff = request_list[i] - request_list[head];
                         next_head = i;
                     }
                 }
             }
-            if(min_diff == 201){// check if no more nodes to the left
+            if(next_head == head || count == num_elem){// check if no more nodes to the left
                 //calculate remaining tracks to 0
                 total_tracks += 199-request_list[head]; // since goes to zero should be the heads distnace from 0
-                request_list[head] = 500;
+                request_list[head] = 199;
                 travel_left = 1; //set to false, so goes right next
-                head = 199;
-                min_diff = 201;
+                min_diff = 202;
             }
             else{
                 request_list[head] = 500;
                 head = next_head;
                 traverse_list[count] = request_list[head];
                 total_tracks += min_diff;
-                min_diff = 201;
+                min_diff = 202;
                 count++;
             }
         }  

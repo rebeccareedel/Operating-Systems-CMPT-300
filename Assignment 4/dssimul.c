@@ -7,7 +7,6 @@
 
 #define n 50
 
-
 // Shortest Seek Time First -- chooses request next closest to head -> not fair 
 void sstf(int* arr, int num_elem){
 
@@ -54,11 +53,11 @@ void sstf(int* arr, int num_elem){
     int num_delays = 0;
     int average_delay = 0;
     for(int i= 0;i<num_elem;i++){
-        delay[i] = 0; //head has no delay while servicing request
+        delay[i] = 0;
         for(int j=0;j<num_elem;j++){
             if(arr[i] == traverse_list[j]){
                 //where the delay occurs, find the shifted index
-                delay[i] = j-i; //with respect to the original index, how shifted to the right is the new index? 
+                delay[i] = j-i; //with respect to the original index, how shifted is the new index? 
                 break;
             }
         }
@@ -66,7 +65,7 @@ void sstf(int* arr, int num_elem){
             longest_delay = delay[i]; //longest shifted index
         }
         //printf("%d ", delay[i]);
-        if(delay[i]>0){ //only positively shifted index (shifted to the right)
+        if(delay[i]>0){ //only positively shifted index
             num_delays++;
             average_delay += delay[i];
         }

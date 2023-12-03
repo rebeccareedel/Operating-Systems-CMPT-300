@@ -16,7 +16,6 @@ void sstf(int* arr, int num_elem){
             request_list[i] = arr[i];
             printf("%d ", arr[i]);
     }
-    
     // set track number to first index of arr
     int traverse_list[num_elem];
     traverse_list[0] = request_list[0];
@@ -51,9 +50,9 @@ void sstf(int* arr, int num_elem){
     int longest_delay = 0;
     int delay[num_elem]; // record the delays in all elements
     int num_delays = 0;
-    int average_delay = 0;
+    int sum_delays = 0;
     for(int i= 0;i<num_elem;i++){
-        delay[i] = 0;
+        delay[i] = 0; //no delay in head element
         for(int j=0;j<num_elem;j++){
             if(arr[i] == traverse_list[j]){
                 //where the delay occurs, find the shifted index
@@ -67,11 +66,11 @@ void sstf(int* arr, int num_elem){
         //printf("%d ", delay[i]);
         if(delay[i]>0){ //only positively shifted index
             num_delays++;
-            average_delay += delay[i];
+            sum_delays += delay[i];
         }
     }
     printf("Longest Delay =  %d \n", longest_delay);
-    printf("Average Delay =  %d \n", average_delay/num_delays);
+    printf("Average Delay =  %f \n", (float)sum_delays/num_delays);
     
 
 }
@@ -84,7 +83,6 @@ void scan(int* arr, int num_elem){
             request_list[i] = arr[i];
             printf("%d ", arr[i]);
     }
-    
     // set track number to first index of arr
     int traverse_list[num_elem];
     traverse_list[0] = request_list[0];
@@ -138,7 +136,7 @@ void scan(int* arr, int num_elem){
             }
             if(next_head == head || count == num_elem){// check if no more nodes to the left
                 //calculate remaining tracks to 0
-                total_tracks += 199-request_list[head]; // since goes to zero should be the heads distnace from 0
+                total_tracks += arr[num_elem-1]-request_list[head]; // since goes to zero should be the heads distnace from 0
                 request_list[head] = 199;
                 travel_left = 1; //set to false, so goes right next
                 min_diff = 202;
@@ -159,46 +157,32 @@ void scan(int* arr, int num_elem){
     }
     printf("\nTotal number of tracks passed =  %d \n", total_tracks);
 
-}
-
-void scan2(int* arr, int num_elem){
-
-    int request_list[num_elem];
-    int traverse_list[num_elem];
-    printf("Initial Request List of track numbers =>\n");
-    for( int i = 0; i < num_elem; i ++){
-        request_list[i] = arr[i];
-        printf("%d ", arr[i]);
-    }
-    int left = 0;
-    int head = request_list[0];
-    int j,temp;
-    if(left+1 < num_elem)
-    {
-        int pivot = left;
-        j=left+1;
-        for(int i=left+1;i<num_elem;++i)
-        {
-            if(request_list[i]<request_list[pivot])
-            {
-                temp=request_list[i];
-                request_list[i]=request_list[j];
-                request_list[j]=temp;
-                j++;
+    //For longest delay - find the max shifted index
+    int longest_delay = 0;
+    int delay[num_elem]; // record the delays in all elements
+    int num_delays = 0;
+    int sum_delays = 0;
+    for(int i= 0;i<num_elem;i++){
+        delay[i] = 0; //no delay in head element
+        for(int j=0;j<num_elem;j++){
+            if(arr[i] == traverse_list[j]){
+                //where the delay occurs, find the shifted index
+                delay[i] = j-i; //with respect to the original index, how shifted is the new index? 
+                break;
             }
-
-        }   
-        temp=request_list[j-1];
-        request_list[j-1]=request_list[pivot];
-        request_list[pivot]=temp;
-
+        }
+        if(delay[i] > longest_delay){
+            longest_delay = delay[i]; //longest shifted index
+        }
+        //printf("%d ", delay[i]);
+        if(delay[i]>0){ //only positively shifted index
+            num_delays++;
+            sum_delays += delay[i];
+        }
     }
-    traverse_list[0] = head;
+    printf("Longest Delay =  %d \n", longest_delay);
+    printf("Average Delay =  %f \n", (float)sum_delays/num_delays);
     
-    printf("Update Request List of track numbers =>\n");
-    for( int i = 0; i < num_elem; i ++){
-        printf("%d ", request_list[i]);
-    }
 }
 
 
@@ -288,13 +272,15 @@ int main(int argc, char* argv[]) {
         num_elem = n;
     }
 
-    
+    printf("\n\nSHORTEST SEEK TIME FIRST ALGORITHM: \n");
     // call sstf
     sstf(current_list, num_elem);
     
+    printf("\n\nSCAN ALGORITHM: \n");
     // call scan
     scan(current_list, num_elem);
 
+    //free malloc memory pointer
     free(current_list);
     return 0;
 }

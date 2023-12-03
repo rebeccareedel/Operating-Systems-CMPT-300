@@ -72,7 +72,6 @@ void sstf(int* arr, int num_elem){
     printf("Longest Delay =  %d \n", longest_delay);
     printf("Average Delay =  %f \n", (float)sum_delays/num_delays);
     
-
 }
 
 // Scan -- heads keeps moving back and forth across disk -> prevents starvation, middle passed 2x more than end
@@ -181,7 +180,12 @@ void scan(int* arr, int num_elem){
         }
     }
     printf("Longest Delay =  %d \n", longest_delay);
-    printf("Average Delay =  %f \n", (float)sum_delays/num_delays);
+    if(num_delays>0){
+    	printf("Average Delay =  %f \n", (float)sum_delays/num_delays);
+    }
+    else{
+    	printf("Average Delay =  %f \n", 0.0);
+    }
     
 }
 
@@ -222,7 +226,8 @@ void convertToList(char* str, int* num_elem, int **result_list){
     for (char* current = str; *current != '\0'; current++) {
         if (*current == ',') // current = delimiter
         {   
-            // make sure integer input in [0,199] range
+            // make sure integer input in [0,199] range OR if track numbers are unique
+            
             if(nextNumber <0 || nextNumber > 199){
                 fprintf(stderr,"Please provide integers in [0,199] range \n");
                 exit(1);
@@ -231,9 +236,9 @@ void convertToList(char* str, int* num_elem, int **result_list){
             *num_elem += 1;
             *result_list = realloc(*result_list, *num_elem * sizeof(int)); // allocate more space
             nextNumber = 0;  // set to 0 for next value
-        } 
+        }
         else if (nextNumber == ' '){ // check for spaces
-            fprintf(stderr,"Please provide integers in [0,199] range: with NO SPACES \n");
+            fprintf(stderr,"Please provide unique integers in [0,199] range: with NO SPACES \n");
             exit(1);
         }
         else {
@@ -246,10 +251,17 @@ void convertToList(char* str, int* num_elem, int **result_list){
         fprintf(stderr,"Please provide integers in [0,199] range, no spaces\n");
         exit(1);
     }
+    //Check for unique integers for track requests. 
+    for(int i=0;i<*num_elem;i++){
+    	if(nextNumber == (*result_list)[i]){
+    		fprintf(stderr,"Please provide UNIQUE integers in [0,199] range, no spaces\n");
+        	exit(1);
+    	}
+    }
     // add the last int
     (*result_list)[currentIndex] = nextNumber;
 
-    // check number of elements, if <3 call make random
+    // check number of elements, if < 3 call make random
     if(*num_elem <3){
         // ERROR
         fprintf(stderr,"Please provide atleast 3 unique tracks within the range [0,199], no spaces: \n");

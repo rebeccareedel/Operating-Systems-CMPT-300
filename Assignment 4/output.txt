@@ -1,4 +1,6 @@
+Two example outputs of the SSTF and SCAN Algorithms, created by Rebecca Reedel and Asmita Srivastava
 
+1. EXAMPLE OUTPUT -> given input from command line
 
 SHORTEST SEEK TIME FIRST ALGORITHM: 
 Initial Request List of track numbers =>
@@ -18,3 +20,27 @@ Final Traverse List of track numbers =>
 Total number of tracks passed =  237 
 Longest Delay =  3 
 Average Delay =  2.750000 
+
+
+2. EXAMPLE OUTPUT -> NO input from command line = 50 int long list randomly created
+
+SHORTEST SEEK TIME FIRST ALGORITHM: 
+Initial Request List of track numbers =>
+163 20 94 180 121 185 100 145 118 132 9 16 160 31 130 143 46 58 164 116 50 84 2 71 79 119 36 27 174 176 48 134 146 32 69 52 131 38 147 139 47 56 83 70 114 26 186 142 110 189 
+Final Traverse List of track numbers =>
+163 164 160 147 146 145 143 142 139 134 132 131 130 121 119 118 116 114 110 100 94 84 83 79 71 70 69 58 56 52 50 48 47 46 38 36 32 31 27 26 20 16 9 2 174 176 180 185 186 189 
+Total number of tracks passed =  350 
+Longest Delay =  43 
+Average Delay =  16.304348 
+
+
+SCAN ALGORITHM: 
+Initial Request List of track numbers =>
+163 20 94 180 121 185 100 145 118 132 9 16 160 31 130 143 46 58 164 116 50 84 2 71 79 119 36 27 174 176 48 134 146 32 69 52 131 38 147 139 47 56 83 70 114 26 186 142 110 189 
+Final Traverse List of track numbers =>
+163 160 147 146 145 143 142 139 134 132 131 130 121 119 118 116 114 110 100 94 84 83 79 71 70 69 58 56 52 50 48 47 46 38 36 32 31 27 26 20 16 9 2 164 174 176 180 185 186 189 
+Total number of tracks passed =  352 
+Longest Delay =  43 
+Average Delay =  18.190475 
+
+

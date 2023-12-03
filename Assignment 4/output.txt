@@ -1,0 +1,20 @@
+
+
+SHORTEST SEEK TIME FIRST ALGORITHM: 
+Initial Request List of track numbers =>
+49 20 34 55 23 123 154 12 0 101 188 
+Final Traverse List of track numbers =>
+49 55 34 23 20 12 0 101 123 154 188 
+Total number of tracks passed =  249 
+Longest Delay =  3 
+Average Delay =  3.000000 
+
+
+SCAN ALGORITHM: 
+Initial Request List of track numbers =>
+49 20 34 55 23 123 154 12 0 101 188 
+Final Traverse List of track numbers =>
+49 34 23 20 12 0 55 101 123 154 188 
+Total number of tracks passed =  237 
+Longest Delay =  3 
+Average Delay =  2.750000 

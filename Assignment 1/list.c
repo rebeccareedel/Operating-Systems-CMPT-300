@@ -1,4 +1,4 @@
-// Rebecca Reedel, 301454910
+// Rebecca Reedel
 #include "list.h"
 #include <stdbool.h>
 #include <assert.h>
